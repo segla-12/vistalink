@@ -6,6 +6,8 @@ import { useRouter } from "next/navigation";
 import { v4 as uuidv4 } from "uuid";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
+import TemplateSelector from "@/components/templates/TemplateSelector";
+import type { Template } from "@/lib/templates/types";
 
 // ─── Données ─────────────────────────────────────────────
 const projectTypes = [
@@ -41,7 +43,7 @@ const categories = [
   { id: "autre", icon: "✨", name: "Autre" },
 ];
 
-const TOTAL_STEPS = 5;
+const TOTAL_STEPS = 6;
 
 function generateSlug(name: string): string {
   return name
@@ -74,6 +76,8 @@ export default function CreatePage() {
   const [direction, setDirection] = useState(1);
   const [loading, setLoading] = useState(false);
 
+  const [selectedTemplate, setSelectedTemplate] = useState<Template | null>(null);
+
   const [form, setForm] = useState({
     type: "",
     language: "fr",
@@ -105,8 +109,9 @@ export default function CreatePage() {
       case 1: return !!form.type;
       case 2: return !!form.language;
       case 3: return !!form.category;
-      case 4: return !!form.name;
-      case 5: return true;
+      case 4: return true; // template optional
+      case 5: return !!form.name;
+      case 6: return true;
       default: return false;
     }
   };
@@ -133,6 +138,11 @@ export default function CreatePage() {
     if (form.phone) insertData.phone = form.phone;
     if (form.email) insertData.email = form.email;
     if (form.address) insertData.address = form.address;
+
+    // Ajouter les blocs du template sélectionné
+    if (selectedTemplate) {
+      insertData.blocks = JSON.stringify(selectedTemplate.blocks);
+    }
 
     const { data, error } = await supabase
       .from("catalogs")
@@ -293,8 +303,17 @@ export default function CreatePage() {
                 </div>
               )}
 
-              {/* ─── ÉTAPE 4 : Informations ─── */}
+              {/* ─── ÉTAPE 4 : Template ─── */}
               {step === 4 && (
+                <TemplateSelector
+                  selectedCategory={form.category}
+                  selectedTemplate={selectedTemplate?.id || ""}
+                  onSelect={(t) => setSelectedTemplate(t)}
+                />
+              )}
+
+              {/* ─── ÉTAPE 5 : Informations ─── */}
+              {step === 5 && (
                 <div>
                   <h2 className="text-2xl font-extrabold mb-2">Vos informations</h2>
                   <p className="text-gray-500 mb-8">Remplissez les informations de votre projet.</p>
@@ -367,8 +386,8 @@ export default function CreatePage() {
                 </div>
               )}
 
-              {/* ─── ÉTAPE 5 : Médias ─── */}
-              {step === 5 && (
+              {/* ─── ÉTAPE 6 : Médias ─── */}
+              {step === 6 && (
                 <div>
                   <h2 className="text-2xl font-extrabold mb-2">Ajoutez vos médias</h2>
                   <p className="text-gray-500 mb-8">Vous pourrez toujours modifier ces éléments plus tard dans l'éditeur.</p>
