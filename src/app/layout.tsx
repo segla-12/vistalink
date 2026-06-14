@@ -19,8 +19,8 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "VistaLink - Catalogue Professionnel",
-  description: "Catalogue professionnel haut de gamme",
+  title: "Vistalink - Créez des pages professionnelles qui convertissent",
+  description: "Landing pages, catalogues, tunnels marketing et mini sites web dans une seule plateforme. Sans coder. En quelques minutes.",
 };
 
 export default function RootLayout({
