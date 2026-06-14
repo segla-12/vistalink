@@ -1,20 +1,17 @@
-import { supabase } from "./supabase";
-
 export const uploadImage = async (file: File) => {
-  const fileName = `${Date.now()}-${file.name}`;
+  const formData = new FormData();
+  formData.append("file", file);
 
-  const { error } = await supabase.storage
-    .from("products")
-    .upload(fileName, file);
+  const response = await fetch("/api/upload", {
+    method: "POST",
+    body: formData,
+  });
 
-  if (error) {
-    console.error(error);
-    throw new Error("Upload failed");
+  if (!response.ok) {
+    const error = await response.json();
+    throw new Error(error.error || "Upload failed");
   }
 
-  const { data } = supabase.storage
-    .from("products")
-    .getPublicUrl(fileName);
-
-  return data.publicUrl;
+  const data = await response.json();
+  return data.url;
 };

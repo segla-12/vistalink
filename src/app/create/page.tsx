@@ -5,6 +5,14 @@ import { supabase } from "@/lib/supabase";
 import { useRouter } from "next/navigation";
 import { v4 as uuidv4 } from "uuid";
 
+function generateSlug(name: string): string {
+  return name
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-|-$/g, "")
+    .slice(0, 60) || `catalogue-${uuidv4().slice(0, 8)}`;
+}
+
 export default function CreatePage() {
   const router = useRouter();
 
@@ -20,6 +28,7 @@ export default function CreatePage() {
     setLoading(true);
 
     const editToken = uuidv4();
+    const slug = generateSlug(form.name || "catalogue");
 
     const { data, error } = await supabase
       .from("catalogs")
@@ -28,6 +37,7 @@ export default function CreatePage() {
         whatsapp: form.whatsapp,
         description: form.description,
         edit_token: editToken,
+        slug: slug,
         is_paid: false,
       })
       .select()
@@ -37,11 +47,18 @@ export default function CreatePage() {
 
     if (error || !data) {
       alert("Erreur lors de la création");
+      if (error) {
+  console.error("Message:", error.message);
+  console.error("Details:", error.details);
+  console.error("Hint:", error.hint);
+  console.error("Code:", error.code);
+}
+      if (!data) console.error("Aucune donnée retournée");
       return;
     }
 
-    // redirection vers paiement
-    router.push(`/pay/${editToken}`);
+    // redirection vers l'éditeur pour ajouter du contenu
+    router.push(`/edit/${editToken}`);
   };
 
   return (

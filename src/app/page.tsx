@@ -92,6 +92,36 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* PRICING */}
+      <section id="pricing" className="px-10 py-20 border-t border-slate-800">
+        <h2 className="text-3xl font-bold text-center">
+          Nos forfaits
+        </h2>
+
+        <div className="mt-10 max-w-sm mx-auto">
+          <div className="bg-slate-900 border border-slate-800 rounded-xl p-8 text-center">
+            <h3 className="text-xl font-semibold">Catalogue Digital</h3>
+            <p className="text-4xl font-bold mt-4 text-blue-400">1 000 FCFA</p>
+            <p className="text-slate-400 text-sm mt-1">par mois</p>
+            <ul className="mt-6 space-y-3 text-left text-slate-300">
+              <li>✅ Catalogue en ligne personnalisé</li>
+              <li>✅ Partage sur WhatsApp / réseaux sociaux</li>
+              <li>✅ Images et vidéos illimitées</li>
+              <li>✅ QR Code de votre catalogue</li>
+              <li>✅ Bouton commande WhatsApp direct</li>
+              <li>✅ Lien public personnalisé</li>
+            </ul>
+
+            <Link
+              href="/create"
+              className="mt-8 inline-block w-full bg-green-600 py-3 rounded font-semibold hover:bg-green-700 transition"
+            >
+              Commencer maintenant
+            </Link>
+          </div>
+        </div>
+      </section>
+
       {/* CTA */}
       <section className="text-center py-24 border-t border-slate-800">
         <h2 className="text-4xl font-bold">

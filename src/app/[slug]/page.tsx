@@ -1,5 +1,5 @@
 import { supabase } from "@/lib/supabase";
-import Link from "next/link";
+import CatalogClient from "./CatalogClient";
 
 export default async function CatalogPage({
   params,
@@ -14,28 +14,28 @@ export default async function CatalogPage({
 
   if (!catalog) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-slate-950 text-white">
-        Catalogue introuvable
+      <div className="min-h-screen flex items-center justify-center bg-slate-50 text-slate-900">
+        <div className="text-center p-8">
+          <div className="text-6xl mb-4">🔗</div>
+          <h1 className="text-2xl font-bold">Catalogue introuvable</h1>
+          <p className="text-slate-500 mt-2">Ce lien n'existe pas ou a été supprimé.</p>
+        </div>
       </div>
     );
   }
 
-  // 🔒 BLOQUAGE PAIEMENT ICI (IMPORTANT)
   if (!catalog.is_paid) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-slate-950 text-white text-center p-6">
-        <div>
-          <h1 className="text-2xl font-bold">
-            🔒 Catalogue verrouillé
-          </h1>
-
-          <p className="text-slate-400 mt-2">
-            Accès réservé après paiement (1000 FCFA / mois)
+      <div className="min-h-screen flex items-center justify-center bg-slate-50 text-slate-900 text-center p-6">
+        <div className="max-w-md">
+          <div className="text-6xl mb-4">🔒</div>
+          <h1 className="text-2xl font-bold">Catalogue verrouillé</h1>
+          <p className="text-slate-500 mt-2">
+            Accès réservé après paiement
           </p>
-
           <a
             href={`/pay/${catalog.edit_token}`}
-            className="mt-4 inline-block bg-green-600 px-6 py-3 rounded"
+            className="mt-6 inline-block bg-emerald-600 text-white px-8 py-3 rounded-full font-semibold hover:bg-emerald-700 transition shadow-lg"
           >
             Débloquer maintenant
           </a>
@@ -49,82 +49,5 @@ export default async function CatalogPage({
     .select("*")
     .eq("catalog_id", catalog.id);
 
-  return (
-    <main className="min-h-screen bg-slate-950 text-white">
-
-      {/* HERO */}
-      <header className="text-center py-16 border-b border-slate-800">
-        <h1 className="text-4xl font-bold">{catalog.name}</h1>
-        <p className="text-slate-400 mt-3 max-w-xl mx-auto">
-          {catalog.description}
-        </p>
-
-        {catalog.whatsapp && (
-          <a
-            href={`https://wa.me/${catalog.whatsapp}`}
-            className="inline-block mt-6 bg-green-600 px-6 py-3 rounded-full font-semibold"
-          >
-            Contacter sur WhatsApp
-          </a>
-        )}
-      </header>
-
-      {/* PRODUCTS */}
-      <section className="p-6 grid sm:grid-cols-2 md:grid-cols-3 gap-6">
-
-        {products?.map((p: any) => (
-          <div
-            key={p.id}
-            className="bg-slate-900 border border-slate-800 rounded-xl overflow-hidden hover:scale-[1.02] transition duration-300"
-          >
-
-            {p.media_type === "video" ? (
-              <video
-                src={p.image}
-                controls
-                className="h-56 w-full object-cover"
-              />
-            ) : (
-              <img
-                src={p.image}
-                className="h-56 w-full object-cover"
-              />
-            )}
-
-            <div className="p-4">
-              <h2 className="text-lg font-semibold">{p.title}</h2>
-
-              <p className="text-slate-400 text-sm mt-1">
-                {p.description}
-              </p>
-
-              <div className="flex items-center justify-between mt-4">
-                <span className="text-blue-400 font-bold">
-                  {p.price}
-                </span>
-
-                <a
-                  href={`https://wa.me/${catalog.whatsapp}?text=Je veux commander ${p.title}`}
-                  className="bg-green-600 px-3 py-2 rounded text-sm"
-                >
-                  Commander
-                </a>
-              </div>
-            </div>
-
-          </div>
-        ))}
-
-      </section>
-
-      {/* FLOATING CTA */}
-      <a
-        href={`https://wa.me/${catalog.whatsapp}`}
-        className="fixed bottom-5 right-5 bg-green-500 px-5 py-3 rounded-full shadow-lg font-semibold"
-      >
-        WhatsApp
-      </a>
-
-    </main>
-  );
+  return <CatalogClient catalog={catalog} products={products || []} />;
 }

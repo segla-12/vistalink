@@ -1,9 +1,9 @@
 "use client";
 
 import { useSearchParams } from "next/navigation";
-import { useState } from "react";
+import { Suspense, useState } from "react";
 
-export default function CreateFormPage() {
+function CreateFormContent() {
   const searchParams = useSearchParams();
   const type = searchParams.get("type");
 
@@ -24,8 +24,7 @@ export default function CreateFormPage() {
   };
 
   return (
-    <main className="min-h-screen bg-slate-950 text-white px-6 py-16">
-
+    <>
       <h1 className="text-3xl font-bold text-center">
         Créer votre vitrine - {type}
       </h1>
@@ -68,7 +67,16 @@ export default function CreateFormPage() {
         </button>
 
       </div>
+    </>
+  );
+}
 
+export default function CreateFormPage() {
+  return (
+    <main className="min-h-screen bg-slate-950 text-white px-6 py-16">
+      <Suspense fallback={<p className="text-center text-slate-400">Chargement...</p>}>
+        <CreateFormContent />
+      </Suspense>
     </main>
   );
 }
