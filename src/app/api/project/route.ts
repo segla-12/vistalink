@@ -226,17 +226,21 @@ export async function PUT(request: NextRequest) {
     if (meta?.slug) updates.slug = meta.slug;
     if (meta?.description) updates.description = meta.description;
 
+    console.log("[PUT /api/project] updates:", JSON.stringify(updates).slice(0, 500));
+
     const { error } = await supabaseAdmin
       .from("catalogs")
       .update(updates)
       .eq("edit_token", edit_token);
 
     if (error) {
-      return NextResponse.json({ error: error.message }, { status: 500 });
+      console.error("[PUT /api/project] Supabase error:", error.message, error.details, error.hint);
+      return NextResponse.json({ error: error.message, details: error.details, hint: error.hint }, { status: 500 });
     }
 
     return NextResponse.json({ success: true });
   } catch (err: any) {
+    console.error("[PUT /api/project] Catch error:", err.message, err.stack);
     return NextResponse.json({ error: err.message }, { status: 500 });
   }
 }
