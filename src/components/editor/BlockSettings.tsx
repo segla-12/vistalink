@@ -4,6 +4,7 @@ import { useState } from "react";
 import type { Block } from "@/lib/blocks/types";
 import { getBlockMeta } from "@/lib/blocks/registry";
 import MediaPicker from "./MediaPicker";
+import { socialPlatforms, detectPlatform, getPlatform } from "@/lib/social-platforms";
 
 interface BlockSettingsProps {
   block: Block;
@@ -322,6 +323,82 @@ export default function BlockSettings({ block, onUpdate, onClose }: BlockSetting
                 className="w-full py-2 rounded-lg border border-dashed border-slate-600 text-xs text-slate-400 hover:border-emerald-500 hover:text-emerald-400 transition"
               >
                 + Ajouter une question
+              </button>
+            </div>
+          </FieldGroup>
+        )}
+
+        {/* ───── RÉSEAUX SOCIAUX ───── */}
+        {"socialLinks" in content && (
+          <FieldGroup label={`Réseaux sociaux (${(content.socialLinks || []).length})`}>
+            <div className="space-y-2">
+              {(content.socialLinks || []).map((link: any, i: number) => {
+                const platform = getPlatform(link.platform);
+                return (
+                  <div key={i} className="bg-slate-800 rounded-lg p-3 border border-slate-700 space-y-2">
+                    <div className="flex items-center gap-2">
+                      {/* Sélecteur de plateforme */}
+                      <select
+                        value={link.platform || ""}
+                        onChange={(e) => {
+                          const newLinks = [...(content.socialLinks || [])];
+                          newLinks[i] = { ...newLinks[i], platform: e.target.value };
+                          updateContent("socialLinks", newLinks);
+                        }}
+                        className="flex-1 p-1.5 bg-slate-700 rounded text-xs text-white border-none focus:ring-1 focus:ring-emerald-500"
+                      >
+                        <option value="">Choisir...</option>
+                        {socialPlatforms.filter(p => p.id !== "website").map((p) => (
+                          <option key={p.id} value={p.id}>{p.name}</option>
+                        ))}
+                      </select>
+                      <button
+                        onClick={() => {
+                          const newLinks = (content.socialLinks || []).filter((_: any, idx: number) => idx !== i);
+                          updateContent("socialLinks", newLinks);
+                        }}
+                        className="text-red-400 hover:text-red-300 text-[10px] transition"
+                      >
+                        ✕
+                      </button>
+                    </div>
+                    <div className="relative">
+                      <input
+                        type="url"
+                        value={link.url || ""}
+                        onChange={(e) => {
+                          const newLinks = [...(content.socialLinks || [])];
+                          // Auto-détection de la plateforme
+                          const detected = detectPlatform(e.target.value);
+                          if (detected && !link.platform) {
+                            newLinks[i] = { ...newLinks[i], url: e.target.value, platform: detected };
+                          } else {
+                            newLinks[i] = { ...newLinks[i], url: e.target.value };
+                          }
+                          updateContent("socialLinks", newLinks);
+                        }}
+                        placeholder="https://..."
+                        className="w-full p-1.5 bg-slate-700 rounded text-xs text-white placeholder-slate-500"
+                      />
+                      {platform && (
+                        <span
+                          className="absolute right-2 top-1/2 -translate-y-1/2 w-4 h-4 opacity-50"
+                          dangerouslySetInnerHTML={{ __html: platform.svg }}
+                          style={{ color: platform.color }}
+                        />
+                      )}
+                    </div>
+                  </div>
+                );
+              })}
+              <button
+                onClick={() => {
+                  const newLinks = [...(content.socialLinks || []), { platform: "", url: "" }];
+                  updateContent("socialLinks", newLinks);
+                }}
+                className="w-full py-2 rounded-lg border border-dashed border-slate-600 text-xs text-slate-400 hover:border-emerald-500 hover:text-emerald-400 transition"
+              >
+                + Ajouter un réseau
               </button>
             </div>
           </FieldGroup>

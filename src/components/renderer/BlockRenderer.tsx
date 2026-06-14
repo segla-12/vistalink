@@ -490,6 +490,8 @@ function LogosBlock({ block }: { block: Block }) {
   );
 }
 
+import { getPlatform, detectPlatform } from "@/lib/social-platforms";
+
 function SocialBlock({ block }: { block: Block }) {
   const { content } = block;
   const links = content.socialLinks || [];
@@ -497,17 +499,45 @@ function SocialBlock({ block }: { block: Block }) {
     <section className="py-12 px-5 md:px-8">
       <div className="text-center">
         {content.title && <h3 className="text-lg font-bold text-[#0F172A] mb-6">{content.title}</h3>}
-        <div className="flex justify-center gap-4">
-          {links.map((link, i) => (
-            <a
-              key={i}
-              href={link.url || "#"}
-              target="_blank"
-              className="w-12 h-12 rounded-full bg-slate-100 hover:bg-emerald-100 flex items-center justify-center text-slate-600 hover:text-emerald-600 transition-all duration-300 text-lg"
-            >
-              {link.platform === "whatsapp" ? "📱" : link.platform === "facebook" ? "📘" : link.platform === "instagram" ? "📷" : "🔗"}
-            </a>
-          ))}
+        <div className="flex flex-wrap justify-center gap-4">
+          {links.map((link: any, i: number) => {
+            const platform = getPlatform(link.platform);
+            const color = platform?.color || "#6B7280";
+            return (
+              <a
+                key={i}
+                href={link.url || "#"}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-12 h-12 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110 hover:shadow-lg"
+                style={{
+                  backgroundColor: `${color}15`,
+                  color: color,
+                }}
+                title={platform?.name || link.platform}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.backgroundColor = color;
+                  e.currentTarget.style.color = "#ffffff";
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.backgroundColor = `${color}15`;
+                  e.currentTarget.style.color = color;
+                }}
+              >
+                {platform ? (
+                  <span
+                    className="w-6 h-6"
+                    dangerouslySetInnerHTML={{ __html: platform.svg }}
+                  />
+                ) : (
+                  <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" />
+                    <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
+                  </svg>
+                )}
+              </a>
+            );
+          })}
         </div>
       </div>
     </section>

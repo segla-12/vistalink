@@ -116,22 +116,27 @@ export default function CreatePage() {
     const editToken = uuidv4();
     const slug = generateSlug(form.name || "projet");
 
+    // Construire les données en n'envoyant que les champs qui existent
+    const insertData: any = {
+      name: form.name,
+      whatsapp: form.whatsapp,
+      description: form.description,
+      edit_token: editToken,
+      slug: slug,
+      is_paid: false,
+    };
+
+    // Ajouter les champs optionnels seulement s'ils ne sont pas vides
+    if (form.type) insertData.type = form.type;
+    if (form.language) insertData.language = form.language;
+    if (form.category) insertData.category = form.category;
+    if (form.phone) insertData.phone = form.phone;
+    if (form.email) insertData.email = form.email;
+    if (form.address) insertData.address = form.address;
+
     const { data, error } = await supabase
       .from("catalogs")
-      .insert({
-        name: form.name,
-        whatsapp: form.whatsapp,
-        description: form.description,
-        edit_token: editToken,
-        slug: slug,
-        is_paid: false,
-        type: form.type,
-        language: form.language,
-        category: form.category,
-        phone: form.phone,
-        email: form.email,
-        address: form.address,
-      })
+      .insert(insertData)
       .select()
       .single();
 
