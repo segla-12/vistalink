@@ -3,6 +3,7 @@
 import { useState } from "react";
 import type { Block } from "@/lib/blocks/types";
 import { getBlockMeta } from "@/lib/blocks/registry";
+import MediaPicker from "./MediaPicker";
 
 interface BlockSettingsProps {
   block: Block;
@@ -128,39 +129,30 @@ export default function BlockSettings({ block, onUpdate, onClose }: BlockSetting
 
         {/* ───── IMAGE ───── */}
         {"image" in content && (
-          <FieldGroup label="Image (URL)">
-            <input
-              type="text"
-              value={content.image || ""}
-              onChange={(e) => updateContent("image", e.target.value)}
-              placeholder="https://..."
-              className="w-full p-2.5 bg-slate-800 border border-slate-700 rounded-lg text-sm text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500"
-            />
-            {content.image && (
-              <img src={content.image} alt="preview" className="mt-2 w-full h-24 object-cover rounded-lg border border-slate-700" />
-            )}
-          </FieldGroup>
+          <MediaPicker
+            label="Image"
+            value={content.image || ""}
+            onChange={(url) => updateContent("image", url)}
+            type="image"
+          />
         )}
 
         {/* ───── VIDÉO ───── */}
         {"video" in content && (
-          <FieldGroup label="Vidéo (URL)">
-            <input
-              type="text"
-              value={content.video || ""}
-              onChange={(e) => updateContent("video", e.target.value)}
-              placeholder="https://youtube.com/..."
-              className="w-full p-2.5 bg-slate-800 border border-slate-700 rounded-lg text-sm text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500"
-            />
-          </FieldGroup>
+          <MediaPicker
+            label="Vidéo"
+            value={content.video || ""}
+            onChange={(url) => updateContent("video", url)}
+            type="video"
+          />
         )}
 
         {/* ───── ARTICLES (items) ───── */}
         {"items" in content && content.items && (
           <FieldGroup label={`Éléments (${content.items.length})`}>
-            <div className="space-y-2">
+            <div className="space-y-3">
               {content.items.map((item, i) => (
-                <div key={item.id || i} className="bg-slate-800 rounded-lg p-3 border border-slate-700">
+                <div key={item.id || i} className="bg-slate-800 rounded-lg p-3 border border-slate-700 space-y-1.5">
                   <input
                     type="text"
                     value={item.title || ""}
@@ -170,7 +162,7 @@ export default function BlockSettings({ block, onUpdate, onClose }: BlockSetting
                       updateContent("items", newItems);
                     }}
                     placeholder="Titre"
-                    className="w-full p-1.5 bg-slate-700 rounded text-xs text-white mb-1.5"
+                    className="w-full p-1.5 bg-slate-700 rounded text-xs text-white"
                   />
                   <input
                     type="text"
@@ -181,7 +173,7 @@ export default function BlockSettings({ block, onUpdate, onClose }: BlockSetting
                       updateContent("items", newItems);
                     }}
                     placeholder="Description"
-                    className="w-full p-1.5 bg-slate-700 rounded text-xs text-white mb-1.5"
+                    className="w-full p-1.5 bg-slate-700 rounded text-xs text-white"
                   />
                   {item.price !== undefined && (
                     <input
@@ -196,6 +188,44 @@ export default function BlockSettings({ block, onUpdate, onClose }: BlockSetting
                       className="w-full p-1.5 bg-slate-700 rounded text-xs text-white"
                     />
                   )}
+                  {item.icon !== undefined && (
+                    <input
+                      type="text"
+                      value={item.icon || ""}
+                      onChange={(e) => {
+                        const newItems = [...(content.items || [])];
+                        newItems[i] = { ...newItems[i], icon: e.target.value };
+                        updateContent("items", newItems);
+                      }}
+                      placeholder="Icône (emoji)"
+                      className="w-full p-1.5 bg-slate-700 rounded text-xs text-white"
+                    />
+                  )}
+                  {/* Image de l'élément */}
+                  {"image" in item && (
+                    <MediaPicker
+                      label=""
+                      value={item.image || ""}
+                      onChange={(url) => {
+                        const newItems = [...(content.items || [])];
+                        newItems[i] = { ...newItems[i], image: url };
+                        updateContent("items", newItems);
+                      }}
+                      type="image"
+                      compact
+                    />
+                  )}
+                  <div className="flex justify-end">
+                    <button
+                      onClick={() => {
+                        const newItems = (content.items || []).filter((_, idx) => idx !== i);
+                        updateContent("items", newItems);
+                      }}
+                      className="text-[10px] text-red-400 hover:text-red-300 transition"
+                    >
+                      ✕ Supprimer
+                    </button>
+                  </div>
                 </div>
               ))}
               <button
