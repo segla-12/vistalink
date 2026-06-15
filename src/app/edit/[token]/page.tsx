@@ -25,6 +25,7 @@ export default function EditPage({
   const [token, setToken] = useState("");
   const [projectName, setProjectName] = useState("Mon projet");
   const [blocks, setBlocks] = useState<Block[]>([]);
+  const [isPaid, setIsPaid] = useState(false); // Nouveau state pour le statut de paiement
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
@@ -51,6 +52,7 @@ export default function EditPage({
           if (data.project?.blocks) {
             setBlocks(data.project.blocks);
             setProjectName(data.project.name || "Mon projet");
+            setIsPaid(data.project.is_paid || false); // Récupérer le statut de paiement
             setLoading(false);
             return;
           }
@@ -64,6 +66,7 @@ export default function EditPage({
       if (localProject) {
         setBlocks(localProject.blocks || []);
         setProjectName(localProject.name || "Mon projet");
+        setIsPaid(localProject.is_paid || false); // Récupérer le statut de paiement local
         setLoading(false);
         return;
       }
@@ -133,6 +136,7 @@ export default function EditPage({
       onSave={handleSave}
       projectName={projectName}
       editToken={token}
+      isPaid={isPaid} // Passer le statut de paiement à EditorShell
     />
   );
 }

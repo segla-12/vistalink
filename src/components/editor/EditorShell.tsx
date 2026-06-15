@@ -26,6 +26,7 @@ interface EditorShellProps {
   onSave?: (blocks: Block[]) => void;
   projectName?: string;
   editToken?: string;
+  isPaid?: boolean; // Nouvelle prop pour le statut de paiement
 }
 
 type DeviceType = "mobile" | "tablet" | "desktop";
@@ -71,6 +72,7 @@ export default function EditorShell({
   onSave,
   projectName = "Mon projet",
   editToken,
+  isPaid = false, // Valeur par défaut
 }: EditorShellProps) {
   const [blocks, setBlocks] = useState<Block[]>(() => {
     if (initialBlocks.length === 0 && templates.length > 0) {
@@ -206,52 +208,85 @@ export default function EditorShell({
   // --- Publication ---
   const handlePublish = useCallback(async () => {
     if (isPublishing) return;
-    setIsPublishing(true);
-    const loadingId = addNotification("loading", "Publication en cours...");
+    setIsPublishing(true); // Début de l'état de publication
+    let notificationId: string | null = null;
 
     try {
       console.log("[EditorShell] Publication déclenchée");
 
-      // D'abord sauvegarder les blocs
+      // 1. Sauvegarder les blocs avant toute action de publication/paiement
       if (editToken) {
+        notificationId = addNotification("loading", "Sauvegarde du projet...");
         const saveRes = await fetch("/api/project", {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             edit_token: editToken,
             blocks,
+            // On ne met pas is_published ici, c'est géré par /api/project/publish
           }),
         });
 
         const saveData = await saveRes.json();
-        console.log("[EditorShell] Sauvegarde avant publication:", saveData);
+        removeNotification(notificationId);
 
         if (!saveRes.ok) {
           throw new Error(saveData.error || `Erreur sauvegarde ${saveRes.status}`);
         }
-
-        // Puis marquer comme payé/publik
-        await fetch("/api/project", {
-          method: "PUT",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            edit_token: editToken,
-            // On pourrait ajouter un champ is_published ici
-          }),
-        });
       }
 
-      removeNotification(loadingId);
+      // 2. Vérifier le statut de paiement
+      if (!isPaid) {
+        // Si non payé, initier le paiement
+        notificationId = addNotification("loading", "Création de la commande de paiement...");
+        const paymentRes = await fetch("/api/payment/create-order", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ edit_token: editToken }),
+        });
+
+        const paymentData = await paymentRes.json();
+        removeNotification(notificationId);
+
+        if (!paymentRes.ok) {
+          throw new Error(paymentData.error || `Erreur lors de la création de la commande de paiement ${paymentRes.status}`);
+        }
+
+        if (paymentData.paymentUrl) {
+          addNotification("success", "Redirection vers la page de paiement...");
+          window.location.href = paymentData.paymentUrl; // Redirection vers la passerelle de paiement
+        } else {
+          throw new Error("URL de paiement non reçue.");
+        }
+        return; // Arrêter ici, l'utilisateur sera redirigé
+      }
+
+      // 3. Si le projet est déjà payé, procéder à la publication finale
+      notificationId = addNotification("loading", "Finalisation de la publication...");
+      const publishRes = await fetch("/api/project/publish", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ edit_token: editToken }),
+      });
+
+      const publishData = await publishRes.json();
+      removeNotification(notificationId);
+
+      if (!publishRes.ok) {
+        throw new Error(publishData.error || `Erreur lors de la publication ${publishRes.status}`);
+      }
+
       addNotification("success", "Projet publié avec succès 🚀");
-      console.log("[EditorShell] Publication réussie");
+      console.log("[EditorShell] Publication réussie:", publishData);
+      // La page de succès affichera les liens publics, d'édition et le QR code
     } catch (err: any) {
       console.error("[EditorShell] Erreur publication:", err.message);
-      removeNotification(loadingId);
+      if (notificationId) removeNotification(notificationId);
       addNotification("error", `Erreur de publication : ${err.message}`);
     } finally {
       setIsPublishing(false);
     }
-  }, [blocks, editToken, isPublishing, addNotification, removeNotification]);
+  }, [blocks, editToken, isPublishing, isPaid, addNotification, removeNotification]);
 
   // --- Gestion des pages ---
   const switchPage = useCallback(
