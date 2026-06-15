@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { initBlockRegistry } from "@/lib/blocks/registry";
 import type { Block } from "@/lib/blocks/types";
 import EditorShell from "@/components/editor/EditorShell";
+import { getLocalProjectByToken, updateLocalProject } from "@/lib/local-db";
 
 // ─── Initialiser le registre une fois ───────────────────
 let registryReady = false;
@@ -36,33 +37,53 @@ export default function EditPage({
     resolve();
   }, [params]);
 
-  // Charger le projet via l'API
+  // Charger le projet
   useEffect(() => {
     if (!token) return;
     ensureRegistry();
 
     const load = async () => {
       try {
+        // 1. Essayer Supabase via l'API
         const res = await fetch(`/api/project?token=${token}`);
-        if (!res.ok) {
-          const err = await res.json();
-          throw new Error(err.error || "Impossible de charger le projet");
+        if (res.ok) {
+          const data = await res.json();
+          if (data.project?.blocks) {
+            setBlocks(data.project.blocks);
+            setProjectName(data.project.name || "Mon projet");
+            setLoading(false);
+            return;
+          }
         }
-        const data = await res.json();
-        setBlocks(data.project.blocks || []);
-        setProjectName(data.project.name || "Mon projet");
-      } catch (err: any) {
-        setError(err.message);
+      } catch (e) {
+        console.warn("[edit] Supabase indisponible, fallback localStorage");
       }
+
+      // 2. Fallback localStorage
+      const localProject = getLocalProjectByToken(token);
+      if (localProject) {
+        setBlocks(localProject.blocks || []);
+        setProjectName(localProject.name || "Mon projet");
+        setLoading(false);
+        return;
+      }
+
+      // 3. Projet introuvable
+      setError("Projet introuvable");
       setLoading(false);
     };
 
     load();
   }, [token]);
 
-  // Sauvegarder
+  // Sauvegarder (local + Supabase)
   const handleSave = useCallback(async (newBlocks: Block[]) => {
     if (!token) return;
+
+    // 1. Toujours sauvegarder en local
+    updateLocalProject(token, { blocks: newBlocks });
+
+    // 2. Essayer Supabase
     try {
       await fetch("/api/project", {
         method: "PUT",
@@ -73,7 +94,7 @@ export default function EditPage({
         }),
       });
     } catch (err) {
-      console.error("Save error:", err);
+      console.warn("[edit] Sauvegarde Supabase échouée, local ok");
     }
   }, [token]);
 
@@ -111,6 +132,7 @@ export default function EditPage({
       initialBlocks={blocks}
       onSave={handleSave}
       projectName={projectName}
+      editToken={token}
     />
   );
 }

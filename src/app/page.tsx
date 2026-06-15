@@ -1,50 +1,57 @@
 import Link from "next/link";
+import Image from "next/image";
 
 // ─── Données ─────────────────────────────────────────────
 const features = [
   {
     icon: "📄",
+    image: "/images/homepage/feature-landing.jpg",
     title: "Landing Pages",
     description: "Créez des pages optimisées pour convertir vos visiteurs en clients.",
   },
   {
     icon: "🔀",
+    image: "/images/homepage/feature-funnel.jpg",
     title: "Funnels Marketing",
     description: "Construisez des parcours simples qui transforment les visiteurs en clients.",
   },
   {
     icon: "📦",
+    image: "/images/homepage/feature-catalog.jpg",
     title: "Catalogues Professionnels",
     description: "Présentez vos produits et services avec un rendu haut de gamme.",
   },
   {
     icon: "🌐",
+    image: "/images/homepage/feature-minisite.jpg",
     title: "Mini Sites Web",
     description: "Disposez d'une présence professionnelle sans développement.",
   },
   {
     icon: "🎨",
+    image: "/images/homepage/feature-portfolio.jpg",
     title: "Portfolio",
     description: "Mettez en valeur vos réalisations avec un rendu élégant.",
   },
   {
     icon: "📱",
+    image: "/images/homepage/feature-qr.jpg",
     title: "QR Codes et Partage",
     description: "Partagez vos créations en quelques secondes sur tous les réseaux.",
   },
 ];
 
 const categories = [
-  { name: "Restaurant", emoji: "🍽️" },
-  { name: "Photographe", emoji: "📷" },
-  { name: "Graphiste", emoji: "🎨" },
-  { name: "Immobilier", emoji: "🏠" },
-  { name: "Médecin", emoji: "⚕️" },
-  { name: "Garage", emoji: "🔧" },
-  { name: "Styliste", emoji: "👗" },
-  { name: "Commerce", emoji: "🛍️" },
-  { name: "Consultant", emoji: "💼" },
-  { name: "Artisan", emoji: "🔨" },
+  { name: "Restaurant", emoji: "🍽️", image: "/images/homepage/cat-restaurant.jpg" },
+  { name: "Photographe", emoji: "📷", image: "/images/homepage/cat-photographer.jpg" },
+  { name: "Graphiste", emoji: "🎨", image: "/images/homepage/cat-graphiste.jpg" },
+  { name: "Immobilier", emoji: "🏠", image: "/images/homepage/cat-immobilier.jpg" },
+  { name: "Médecin", emoji: "⚕️", image: "/images/homepage/cat-medecin.jpg" },
+  { name: "Garage", emoji: "🔧", image: "/images/homepage/cat-garage.jpg" },
+  { name: "Styliste", emoji: "👗", image: "/images/homepage/cat-styliste.jpg" },
+  { name: "Commerce", emoji: "🛍️", image: "/images/homepage/cat-commerce.jpg" },
+  { name: "Consultant", emoji: "💼", image: "/images/homepage/cat-consultant.jpg" },
+  { name: "Artisan", emoji: "🔨", image: "/images/homepage/cat-artisan.jpg" },
 ];
 
 const steps = [
@@ -59,16 +66,19 @@ const testimonials = [
     name: "Aminata K.",
     role: "Commerçante, Douala",
     text: "J'ai créé mon catalogue en 3 minutes. Mes clients adorent le rendu et je reçois plus de commandes sur WhatsApp.",
+    image: "/images/homepage/testimonial-1.jpg",
   },
   {
     name: "Jean-Pierre M.",
     role: "Photographe, Yaoundé",
     text: "Enfin un outil simple pour présenter mon portfolio. Le résultat est vraiment professionnel.",
+    image: "/images/homepage/testimonial-2.jpg",
   },
   {
     name: "Fatima B.",
     role: "Styliste, Paris",
     text: "Je partage mon lien Vistalink sur Instagram et TikTok. Mes clientes peuvent voir toute ma collection.",
+    image: "/images/homepage/testimonial-3.jpg",
   },
 ];
 
@@ -82,9 +92,14 @@ export default function HomePage() {
         <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2">
-            <div className="w-8 h-8 bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-lg flex items-center justify-center">
-              <span className="text-white font-bold text-sm">V</span>
-            </div>
+            <Image
+              src="/images/vistalink-logo.png"
+              alt="Vistalink"
+              width={32}
+              height={32}
+              className="h-8 w-8 rounded-lg object-contain"
+              priority
+            />
             <span className="font-bold text-lg tracking-tight">Vistalink</span>
           </Link>
 
@@ -92,17 +107,24 @@ export default function HomePage() {
           <nav className="hidden md:flex items-center gap-8 text-sm text-gray-500">
             <a href="#features" className="hover:text-gray-900 transition">Fonctionnalités</a>
             <a href="#templates" className="hover:text-gray-900 transition">Modèles</a>
-            <a href="#pricing" className="hover:text-gray-900 transition">Tarifs</a>
-            <a href="#" className="hover:text-gray-900 transition">Connexion</a>
+            <Link href="/dashboard" className="hover:text-gray-900 transition">Mes projets</Link>
           </nav>
 
           {/* CTA */}
-          <Link
-            href="/create"
-            className="bg-[#0F172A] text-white px-5 py-2.5 rounded-full text-sm font-semibold hover:bg-gray-800 transition shadow-sm"
-          >
-            Commencer
-          </Link>
+          <div className="flex items-center gap-3">
+            <Link
+              href="/dashboard"
+              className="text-sm text-gray-500 hover:text-gray-900 transition md:hidden"
+            >
+              Mes projets
+            </Link>
+            <Link
+              href="/create"
+              className="bg-[#0F172A] text-white px-5 py-2.5 rounded-full text-sm font-semibold hover:bg-gray-800 transition shadow-sm"
+            >
+              Commencer
+            </Link>
+          </div>
         </div>
       </header>
 
@@ -145,40 +167,17 @@ export default function HomePage() {
 
             {/* Mockup */}
             <div className="relative hidden lg:block">
-              <div className="relative bg-gradient-to-br from-gray-100 to-gray-50 rounded-3xl p-8 shadow-2xl border border-gray-200">
-                {/* Window chrome */}
-                <div className="flex items-center gap-1.5 mb-6">
-                  <div className="w-3 h-3 rounded-full bg-red-400" />
-                  <div className="w-3 h-3 rounded-full bg-yellow-400" />
-                  <div className="w-3 h-3 rounded-full bg-green-400" />
-                </div>
-                {/* Mini pages */}
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="bg-white rounded-2xl p-4 shadow-sm border border-gray-100">
-                    <div className="h-16 bg-gradient-to-r from-emerald-400 to-emerald-600 rounded-lg mb-3" />
-                    <div className="h-2 bg-gray-200 rounded w-3/4 mb-2" />
-                    <div className="h-2 bg-gray-100 rounded w-1/2" />
-                    <div className="mt-3 text-[10px] text-gray-400 font-medium">Landing Page</div>
-                  </div>
-                  <div className="bg-white rounded-2xl p-4 shadow-sm border border-gray-100">
-                    <div className="h-16 bg-gradient-to-r from-blue-400 to-blue-600 rounded-lg mb-3" />
-                    <div className="h-2 bg-gray-200 rounded w-3/4 mb-2" />
-                    <div className="h-2 bg-gray-100 rounded w-1/2" />
-                    <div className="mt-3 text-[10px] text-gray-400 font-medium">Catalogue</div>
-                  </div>
-                  <div className="bg-white rounded-2xl p-4 shadow-sm border border-gray-100">
-                    <div className="h-16 bg-gradient-to-r from-purple-400 to-purple-600 rounded-lg mb-3" />
-                    <div className="h-2 bg-gray-200 rounded w-3/4 mb-2" />
-                    <div className="h-2 bg-gray-100 rounded w-1/2" />
-                    <div className="mt-3 text-[10px] text-gray-400 font-medium">Portfolio</div>
-                  </div>
-                  <div className="bg-white rounded-2xl p-4 shadow-sm border border-gray-100">
-                    <div className="h-16 bg-gradient-to-r from-orange-400 to-orange-600 rounded-lg mb-3" />
-                    <div className="h-2 bg-gray-200 rounded w-3/4 mb-2" />
-                    <div className="h-2 bg-gray-100 rounded w-1/2" />
-                    <div className="mt-3 text-[10px] text-gray-400 font-medium">Funnel</div>
-                  </div>
-                </div>
+              <div className="relative rounded-3xl overflow-hidden shadow-2xl border border-gray-200">
+                <Image
+                  src="/images/homepage/hero-laptop.jpg"
+                  alt="Vistalink - Plateforme de création de pages professionnelles"
+                  width={1200}
+                  height={800}
+                  className="w-full h-auto object-cover"
+                  priority
+                />
+                {/* Overlay gradient */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
               </div>
               {/* Decorative blobs */}
               <div className="absolute -top-8 -right-8 w-32 h-32 bg-emerald-100 rounded-full blur-3xl opacity-60" />
@@ -201,13 +200,25 @@ export default function HomePage() {
             {features.map((f) => (
               <div
                 key={f.title}
-                className="bg-white rounded-2xl p-7 border border-gray-100 shadow-sm hover:shadow-md hover:border-gray-200 transition-all duration-300 group"
+                className="bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-md hover:border-gray-200 transition-all duration-300 group overflow-hidden"
               >
-                <div className="w-12 h-12 bg-gray-50 rounded-xl flex items-center justify-center text-2xl mb-4 group-hover:bg-emerald-50 transition">
-                  {f.icon}
+                <div className="relative h-48 overflow-hidden">
+                  <Image
+                    src={f.image}
+                    alt={f.title}
+                    width={800}
+                    height={400}
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
+                  <div className="absolute top-4 left-4 w-10 h-10 bg-white/90 backdrop-blur rounded-xl flex items-center justify-center text-xl shadow-sm">
+                    {f.icon}
+                  </div>
                 </div>
-                <h3 className="font-bold text-lg mb-2">{f.title}</h3>
-                <p className="text-gray-500 text-sm leading-relaxed">{f.description}</p>
+                <div className="p-6">
+                  <h3 className="font-bold text-lg mb-2">{f.title}</h3>
+                  <p className="text-gray-500 text-sm leading-relaxed">{f.description}</p>
+                </div>
               </div>
             ))}
           </div>
@@ -230,12 +241,19 @@ export default function HomePage() {
             {categories.map((cat) => (
               <div
                 key={cat.name}
-                className="bg-white rounded-2xl border border-gray-100 p-6 text-center hover:border-emerald-200 hover:shadow-md transition-all duration-300 cursor-pointer group"
+                className="relative rounded-2xl overflow-hidden border border-gray-100 hover:border-emerald-200 hover:shadow-md transition-all duration-300 cursor-pointer group aspect-[3/4]"
               >
-                <div className="text-4xl mb-3 group-hover:scale-110 transition-transform duration-300">
-                  {cat.emoji}
+                <Image
+                  src={cat.image}
+                  alt={cat.name}
+                  width={600}
+                  height={800}
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
+                <div className="absolute bottom-0 left-0 right-0 p-4">
+                  <p className="text-sm font-semibold text-white">{cat.name}</p>
                 </div>
-                <p className="text-sm font-semibold text-gray-700">{cat.name}</p>
               </div>
             ))}
           </div>
@@ -294,22 +312,30 @@ export default function HomePage() {
 
             {/* Phone mockup */}
             <div className="flex justify-center">
-              <div className="relative w-[280px]">
+              <div className="relative w-[320px]">
                 <div className="bg-[#0F172A] rounded-[3rem] p-3 shadow-2xl">
                   <div className="bg-white rounded-[2.2rem] overflow-hidden">
                     <div className="h-6 bg-gray-100 flex items-center justify-center">
                       <div className="w-20 h-1.5 bg-gray-300 rounded-full" />
                     </div>
-                    <div className="p-4">
-                      <div className="h-24 bg-gradient-to-br from-emerald-400 to-emerald-600 rounded-xl mb-3" />
-                      <div className="h-3 bg-gray-200 rounded w-3/4 mb-2" />
-                      <div className="h-2 bg-gray-100 rounded w-1/2 mb-4" />
-                      <div className="grid grid-cols-2 gap-2">
-                        <div className="h-16 bg-gray-100 rounded-lg" />
-                        <div className="h-16 bg-gray-100 rounded-lg" />
-                      </div>
-                    </div>
+                    <Image
+                      src="/images/homepage/mobile-phone.jpg"
+                      alt="Vistalink sur mobile"
+                      width={600}
+                      height={900}
+                      className="w-full h-auto object-cover"
+                    />
                   </div>
+                </div>
+                {/* Floating social icons */}
+                <div className="absolute -right-4 top-1/4 bg-white rounded-xl shadow-lg p-2">
+                  <Image
+                    src="/images/homepage/mobile-social.jpg"
+                    alt="Partage social"
+                    width={80}
+                    height={80}
+                    className="w-12 h-12 rounded-lg object-cover"
+                  />
                 </div>
               </div>
             </div>
@@ -343,8 +369,14 @@ export default function HomePage() {
                   &ldquo;{t.text}&rdquo;
                 </p>
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-full bg-gradient-to-br from-emerald-400 to-emerald-600 flex items-center justify-center text-white font-bold text-sm">
-                    {t.name.charAt(0)}
+                  <div className="w-10 h-10 rounded-full overflow-hidden">
+                    <Image
+                      src={t.image}
+                      alt={t.name}
+                      width={80}
+                      height={80}
+                      className="w-full h-full object-cover"
+                    />
                   </div>
                   <div>
                     <p className="text-sm font-semibold">{t.name}</p>
@@ -376,58 +408,9 @@ export default function HomePage() {
       </section>
 
       {/* ═══════════════════ FOOTER ═══════════════════ */}
-      <footer className="border-t border-gray-100 py-16 px-6">
-        <div className="max-w-7xl mx-auto">
-          <div className="grid md:grid-cols-4 gap-10">
-            {/* Brand */}
-            <div className="md:col-span-1">
-              <div className="flex items-center gap-2 mb-4">
-                <div className="w-8 h-8 bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-lg flex items-center justify-center">
-                  <span className="text-white font-bold text-sm">V</span>
-                </div>
-                <span className="font-bold text-lg tracking-tight">Vistalink</span>
-              </div>
-              <p className="text-sm text-gray-400 leading-relaxed">
-                La plateforme simple pour créer, publier et partager des pages professionnelles.
-              </p>
-            </div>
-
-            {/* Produit */}
-            <div>
-              <h4 className="font-semibold text-sm mb-4">Produit</h4>
-              <ul className="space-y-2.5 text-sm text-gray-500">
-                <li><a href="#features" className="hover:text-gray-900 transition">Fonctionnalités</a></li>
-                <li><a href="#templates" className="hover:text-gray-900 transition">Templates</a></li>
-                <li><a href="#pricing" className="hover:text-gray-900 transition">Tarifs</a></li>
-                <li><a href="#" className="hover:text-gray-900 transition">Support</a></li>
-              </ul>
-            </div>
-
-            {/* Entreprise */}
-            <div>
-              <h4 className="font-semibold text-sm mb-4">Entreprise</h4>
-              <ul className="space-y-2.5 text-sm text-gray-500">
-                <li><a href="#" className="hover:text-gray-900 transition">Mentions légales</a></li>
-                <li><a href="#" className="hover:text-gray-900 transition">Politique de confidentialité</a></li>
-                <li><a href="#" className="hover:text-gray-900 transition">Contact</a></li>
-              </ul>
-            </div>
-
-            {/* Créer */}
-            <div>
-              <h4 className="font-semibold text-sm mb-4">Commencer</h4>
-              <Link
-                href="/create"
-                className="inline-block bg-[#0F172A] text-white px-5 py-2.5 rounded-full text-sm font-semibold hover:bg-gray-800 transition"
-              >
-                Créer un projet
-              </Link>
-            </div>
-          </div>
-
-          <div className="mt-12 pt-8 border-t border-gray-100 text-center text-sm text-gray-400">
-            © 2025 Vistalink. Tous droits réservés.
-          </div>
+      <footer className="border-t border-gray-100 py-8 px-6">
+        <div className="max-w-7xl mx-auto text-center text-sm text-gray-400">
+          © 2025 Vistalink. Tous droits réservés.
         </div>
       </footer>
     </main>

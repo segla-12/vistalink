@@ -25,23 +25,23 @@ function HeroBlock({ block }: { block: Block }) {
     <header
       className="relative flex items-center justify-center text-white overflow-hidden"
       style={{
-        minHeight: "90vh",
+        minHeight: "min(760px, 90svh)",
         background: hasImage
           ? `linear-gradient(180deg, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0.75) 100%), url('${content.image}') center/cover no-repeat`
           : styles.backgroundColor || "#0F172A",
-        padding: styles.padding || "80px 24px",
+        padding: styles.padding || "clamp(56px, 12vw, 96px) clamp(16px, 5vw, 24px)",
       }}
     >
       {hasImage && <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/20" />}
       <motion.div
-        className="relative z-10 text-center px-6 max-w-3xl mx-auto w-full"
+        className="relative z-10 text-center px-0 sm:px-6 max-w-3xl mx-auto w-full"
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.9, ease: [0.25, 0.46, 0.45, 0.94] as const }}
       >
         {content.subtitle && (
           <motion.span
-            className="inline-block text-sm text-white/70 tracking-[0.2em] uppercase mb-4 font-medium"
+            className="inline-block text-xs sm:text-sm text-white/70 tracking-[0.18em] sm:tracking-[0.2em] uppercase mb-4 font-medium"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.3 }}
@@ -50,7 +50,7 @@ function HeroBlock({ block }: { block: Block }) {
           </motion.span>
         )}
         <motion.h1
-          className="text-5xl md:text-6xl lg:text-7xl font-extrabold leading-tight tracking-tight"
+          className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold leading-tight tracking-tight break-words"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4, duration: 0.8 }}
@@ -59,7 +59,7 @@ function HeroBlock({ block }: { block: Block }) {
         </motion.h1>
         {content.description && (
           <motion.p
-            className="mt-5 text-base md:text-lg text-white/80 max-w-[700px] mx-auto leading-relaxed font-light"
+            className="mt-5 text-base md:text-lg text-white/80 max-w-[700px] mx-auto leading-relaxed font-light break-words"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.5, duration: 0.8 }}
@@ -77,7 +77,7 @@ function HeroBlock({ block }: { block: Block }) {
             <motion.a
               href={content.buttonUrl || "#"}
               target={content.buttonUrl?.startsWith("http") ? "_blank" : undefined}
-              className="inline-flex items-center gap-3 px-12 py-5 md:px-16 md:py-6 rounded-full text-lg md:text-xl font-bold shadow-2xl transition-all duration-300"
+              className="inline-flex w-full sm:w-auto items-center justify-center gap-3 px-8 py-4 md:px-16 md:py-6 rounded-full text-base md:text-xl font-bold shadow-2xl transition-all duration-300"
               style={{ backgroundColor: content.buttonColor || "#16A34A", color: "#ffffff" }}
               whileHover={{ scale: 1.05, boxShadow: `0 20px 60px -10px ${content.buttonColor || "#16A34A"}80` }}
               whileTap={{ scale: 0.97 }}
@@ -111,12 +111,12 @@ function TextBlock({ block }: { block: Block }) {
           </span>
         )}
         {content.title && (
-          <h2 className="text-3xl md:text-5xl font-extrabold mt-3 leading-tight">
+          <h2 className="text-2xl sm:text-3xl md:text-5xl font-extrabold mt-3 leading-tight break-words">
             {content.title}
           </h2>
         )}
         {content.description && (
-          <p className="mt-6 text-base md:text-lg leading-relaxed" style={{ color: "#64748B" }}>
+          <p className="mt-5 md:mt-6 text-base md:text-lg leading-relaxed break-words" style={{ color: "#64748B" }}>
             {content.description}
           </p>
         )}
@@ -133,9 +133,9 @@ function ProductsBlock({ block }: { block: Block }) {
   return (
     <section className="py-16 md:py-24 px-5 md:px-8" style={{ backgroundColor: "#F8FAFC" }}>
       <div className="max-w-7xl mx-auto">
-        <motion.div className="text-center mb-12" initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp}>
+        <motion.div className="text-center mb-8 md:mb-12" initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp}>
           {content.subtitle && <span className="text-emerald-600 font-semibold text-xs tracking-[0.2em] uppercase">{content.subtitle}</span>}
-          {content.title && <h2 className="text-3xl md:text-5xl font-extrabold text-[#0F172A] mt-3">{content.title}</h2>}
+          {content.title && <h2 className="text-2xl sm:text-3xl md:text-5xl font-extrabold text-[#0F172A] mt-3 break-words">{content.title}</h2>}
           {content.description && <p className="text-[#64748B] mt-4 max-w-xl mx-auto">{content.description}</p>}
         </motion.div>
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
@@ -146,7 +146,7 @@ function ProductsBlock({ block }: { block: Block }) {
               initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp} custom={i}
             >
               {item.image && (
-                <div className="relative h-[280px] overflow-hidden">
+                <div className="relative h-[220px] sm:h-[260px] md:h-[280px] overflow-hidden">
                   <img src={item.image} alt={item.title || ""} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
                 </div>
               )}
@@ -154,10 +154,10 @@ function ProductsBlock({ block }: { block: Block }) {
                 <h3 className="text-xl md:text-2xl font-bold text-[#0F172A]">{item.title}</h3>
                 {item.description && <p className="text-[#64748B] mt-3 leading-relaxed">{item.description}</p>}
                 {item.price && (
-                  <div className="flex items-center justify-between mt-6 pt-4 border-t border-slate-100">
+                  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mt-6 pt-4 border-t border-slate-100">
                     <span className="text-2xl font-extrabold text-[#16A34A]">{item.price}</span>
                     {content.buttonText && (
-                      <span className="ml-auto bg-[#16A34A] text-white px-6 py-3 rounded-full text-sm font-semibold">{content.buttonText}</span>
+                      <span className="w-full sm:w-auto text-center sm:ml-auto bg-[#16A34A] text-white px-6 py-3 rounded-full text-sm font-semibold">{content.buttonText}</span>
                     )}
                   </div>
                 )}
@@ -179,7 +179,7 @@ function TestimonialsBlock({ block }: { block: Block }) {
       <div className="max-w-6xl mx-auto">
         <motion.div className="text-center mb-12" initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp}>
           {content.subtitle && <span className="text-emerald-600 font-semibold text-xs tracking-[0.2em] uppercase">{content.subtitle}</span>}
-          {content.title && <h2 className="text-3xl md:text-5xl font-extrabold text-slate-900 mt-3">{content.title}</h2>}
+          {content.title && <h2 className="text-2xl sm:text-3xl md:text-5xl font-extrabold text-slate-900 mt-3 break-words">{content.title}</h2>}
         </motion.div>
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
           {items.map((item, i) => (
@@ -223,8 +223,8 @@ function StatsBlock({ block }: { block: Block }) {
       }}
     >
       <div className="max-w-5xl mx-auto text-center">
-        {content.title && <h2 className="text-3xl md:text-5xl font-extrabold mb-12">{content.title}</h2>}
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-8">
+        {content.title && <h2 className="text-2xl sm:text-3xl md:text-5xl font-extrabold mb-8 md:mb-12 break-words">{content.title}</h2>}
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
           {stats.map((stat, i) => (
             <motion.div
               key={i}
@@ -234,7 +234,7 @@ function StatsBlock({ block }: { block: Block }) {
               viewport={{ once: true }}
               transition={{ delay: i * 0.1 }}
             >
-              <div className="text-4xl md:text-5xl font-extrabold text-emerald-400">{stat.value}</div>
+              <div className="text-3xl md:text-5xl font-extrabold text-emerald-400 break-words">{stat.value}</div>
               <div className="mt-2 text-sm opacity-80">{stat.label}</div>
             </motion.div>
           ))}
@@ -279,13 +279,13 @@ function CTABlock({ block }: { block: Block }) {
       }}
     >
       <div className="max-w-2xl mx-auto">
-        {content.title && <h2 className="text-3xl md:text-5xl font-extrabold leading-tight">{content.title}</h2>}
-        {content.description && <p className="mt-4 text-lg opacity-80">{content.description}</p>}
+        {content.title && <h2 className="text-2xl sm:text-3xl md:text-5xl font-extrabold leading-tight break-words">{content.title}</h2>}
+        {content.description && <p className="mt-4 text-base md:text-lg opacity-80 break-words">{content.description}</p>}
         {content.buttonText && (
           <motion.a
             href={content.buttonUrl || "#"}
             target={content.buttonUrl?.startsWith("http") ? "_blank" : undefined}
-            className="inline-flex items-center gap-3 mt-8 px-10 py-4 md:px-14 md:py-5 rounded-full text-lg font-bold shadow-2xl transition-all duration-300"
+            className="inline-flex w-full sm:w-auto items-center justify-center gap-3 mt-8 px-8 py-4 md:px-14 md:py-5 rounded-full text-base md:text-lg font-bold shadow-2xl transition-all duration-300"
             style={{ backgroundColor: content.buttonColor || "#16A34A", color: "#ffffff" }}
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.97 }}
@@ -307,7 +307,7 @@ function FAQBlock({ block }: { block: Block }) {
       style={{ backgroundColor: styles.backgroundColor || "transparent" }}
     >
       <div className="mx-auto" style={{ maxWidth: styles.maxWidth || "800px" }}>
-        {content.title && <h2 className="text-3xl md:text-4xl font-extrabold text-center mb-12">{content.title}</h2>}
+        {content.title && <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-center mb-8 md:mb-12 break-words">{content.title}</h2>}
         <div className="space-y-4">
           {faqItems.map((item, i) => (
             <details key={i} className="group bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
@@ -332,15 +332,15 @@ function PricingBlock({ block }: { block: Block }) {
   return (
     <section className="py-16 md:py-24 px-5 md:px-8" style={{ backgroundColor: "#F8FAFC" }}>
       <div className="max-w-5xl mx-auto">
-        <motion.div className="text-center mb-12" initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp}>
-          {content.title && <h2 className="text-3xl md:text-5xl font-extrabold text-[#0F172A]">{content.title}</h2>}
+        <motion.div className="text-center mb-8 md:mb-12" initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp}>
+          {content.title && <h2 className="text-2xl sm:text-3xl md:text-5xl font-extrabold text-[#0F172A] break-words">{content.title}</h2>}
           {content.description && <p className="text-[#64748B] mt-4">{content.description}</p>}
         </motion.div>
         <div className="grid md:grid-cols-3 gap-6">
           {plans.map((plan, i) => (
             <motion.div
               key={plan.name}
-              className={`bg-white rounded-[24px] p-8 shadow-xl transition-all duration-500 ${plan.highlight ? "ring-2 ring-emerald-500 scale-105 md:scale-110 relative" : ""}`}
+              className={`bg-white rounded-[24px] p-6 md:p-8 shadow-xl transition-all duration-500 ${plan.highlight ? "ring-2 ring-emerald-500 md:scale-105 relative" : ""}`}
               initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp} custom={i}
             >
               {plan.highlight && (
@@ -383,12 +383,12 @@ function ContactBlock({ block }: { block: Block }) {
       }}
     >
       <div className="max-w-2xl mx-auto text-center">
-        {content.title && <h2 className="text-3xl md:text-5xl font-extrabold leading-tight">{content.title}</h2>}
-        {content.description && <p className="mt-4 text-lg opacity-80">{content.description}</p>}
+        {content.title && <h2 className="text-2xl sm:text-3xl md:text-5xl font-extrabold leading-tight break-words">{content.title}</h2>}
+        {content.description && <p className="mt-4 text-base md:text-lg opacity-80 break-words">{content.description}</p>}
         {content.buttonText && (
           <motion.a
             href={content.buttonUrl || "#"}
-            className="inline-flex items-center gap-3 mt-8 px-10 py-4 rounded-full text-lg font-bold shadow-2xl"
+            className="inline-flex w-full sm:w-auto items-center justify-center gap-3 mt-8 px-8 sm:px-10 py-4 rounded-full text-base md:text-lg font-bold shadow-2xl"
             style={{ backgroundColor: content.buttonColor || "#16A34A", color: "#ffffff" }}
             whileHover={{ scale: 1.05 }}
           >
@@ -406,8 +406,8 @@ function FeaturesBlock({ block }: { block: Block }) {
   return (
     <section className="py-16 md:py-24 px-5 md:px-8">
       <div className="max-w-6xl mx-auto">
-        <motion.div className="text-center mb-12" initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp}>
-          {content.title && <h2 className="text-3xl md:text-5xl font-extrabold text-[#0F172A]">{content.title}</h2>}
+        <motion.div className="text-center mb-8 md:mb-12" initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp}>
+          {content.title && <h2 className="text-2xl sm:text-3xl md:text-5xl font-extrabold text-[#0F172A] break-words">{content.title}</h2>}
           {content.description && <p className="text-[#64748B] mt-4">{content.description}</p>}
         </motion.div>
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -439,8 +439,8 @@ function TeamBlock({ block }: { block: Block }) {
   return (
     <section className="py-16 md:py-24 px-5 md:px-8">
       <div className="max-w-5xl mx-auto">
-        <motion.div className="text-center mb-12" initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp}>
-          {content.title && <h2 className="text-3xl md:text-5xl font-extrabold text-[#0F172A]">{content.title}</h2>}
+        <motion.div className="text-center mb-8 md:mb-12" initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp}>
+          {content.title && <h2 className="text-2xl sm:text-3xl md:text-5xl font-extrabold text-[#0F172A] break-words">{content.title}</h2>}
         </motion.div>
         <div className="grid md:grid-cols-3 gap-8">
           {members.map((member, i) => (
@@ -476,7 +476,7 @@ function LogosBlock({ block }: { block: Block }) {
           {logos.map((logo, i) => (
             <div key={i} className="h-8 md:h-10 flex items-center">
               {logo.src ? (
-                <img src={logo.src} alt={logo.alt} className="h-full object-contain" />
+                <img src={logo.src} alt={logo.alt} className="h-full max-w-[140px] object-contain" />
               ) : (
                 <div className="bg-slate-200 rounded-lg px-6 h-10 flex items-center text-xs text-slate-400 font-semibold">
                   {logo.alt}
@@ -552,12 +552,12 @@ function AboutBlock({ block }: { block: Block }) {
         <div className="grid md:grid-cols-2 gap-12 md:gap-16 items-center">
           {content.image && (
             <div className="rounded-[24px] overflow-hidden shadow-2xl">
-              <img src={content.image} alt={content.title || ""} className="w-full h-[350px] md:h-[450px] object-cover" />
+              <img src={content.image} alt={content.title || ""} className="w-full h-[260px] sm:h-[350px] md:h-[450px] object-cover" />
             </div>
           )}
           <div>
             {content.subtitle && <span className="text-emerald-600 font-semibold text-xs tracking-[0.2em] uppercase">{content.subtitle}</span>}
-            {content.title && <h2 className="text-3xl md:text-5xl font-extrabold text-[#0F172A] mt-3">{content.title}</h2>}
+            {content.title && <h2 className="text-2xl sm:text-3xl md:text-5xl font-extrabold text-[#0F172A] mt-3 break-words">{content.title}</h2>}
             {content.description && <p className="text-[#64748B] mt-6 leading-relaxed text-base md:text-lg">{content.description}</p>}
           </div>
         </div>

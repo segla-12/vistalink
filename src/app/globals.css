@@ -128,3 +128,25 @@
     @apply font-sans;
   }
 }
+
+@layer components {
+  .page-renderer,
+  .page-renderer * {
+    box-sizing: border-box;
+  }
+
+  .page-renderer {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+    word-break: normal;
+    overflow-wrap: anywhere;
+  }
+
+  .page-renderer img,
+  .page-renderer video,
+  .page-renderer iframe,
+  .page-renderer svg {
+    max-width: 100%;
+  }
+}

@@ -41,7 +41,7 @@ export default function PageRenderer({ blocks, project, previewBanner }: PageRen
         `}</style>
       )}
 
-      <div className="page-renderer" style={{ backgroundColor: "var(--bg, #ffffff)" }}>
+      <div className="page-renderer min-w-0 overflow-x-hidden" style={{ backgroundColor: "var(--bg, #ffffff)" }}>
         {sortedBlocks.length === 0 && (
           <div className="min-h-[60vh] flex items-center justify-center text-slate-400 text-center p-8">
             <div>

@@ -34,10 +34,10 @@ export default function BlockLibrary({ blockMetas, onAddBlock }: BlockLibraryPro
       {/* Search */}
       <input
         type="text"
-        placeholder="Rechercher un bloc..."
+        placeholder="Rechercher un élément..."
         value={searchQuery}
         onChange={(e) => setSearchQuery(e.target.value)}
-        className="w-full p-2.5 bg-slate-800 border border-slate-700 rounded-lg text-sm text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500 mb-4"
+        className="w-full p-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 mb-4"
       />
 
       {/* Catégories */}
@@ -49,7 +49,7 @@ export default function BlockLibrary({ blockMetas, onAddBlock }: BlockLibraryPro
             className={`px-3 py-1.5 rounded-lg text-xs font-medium transition ${
               activeCategory === cat.key
                 ? "bg-emerald-600 text-white"
-                : "bg-slate-800 text-slate-400 hover:bg-slate-700"
+                : "bg-gray-100 text-gray-500 hover:bg-gray-200"
             }`}
           >
             {cat.icon} {cat.label}
@@ -57,23 +57,23 @@ export default function BlockLibrary({ blockMetas, onAddBlock }: BlockLibraryPro
         ))}
       </div>
 
-      {/* Grille de blocs */}
+      {/* Grille d'éléments */}
       <div className="grid grid-cols-2 gap-2">
         {filtered.map((meta) => (
           <button
             key={meta.type}
             onClick={() => onAddBlock(meta.type)}
-            className="flex flex-col items-center gap-1.5 p-3 bg-slate-800 rounded-xl border border-slate-700 hover:border-emerald-500/50 hover:bg-slate-750 transition-all duration-200 group cursor-pointer"
+            className="flex flex-col items-center gap-1.5 p-3 bg-gray-50 rounded-xl border border-gray-200 hover:border-emerald-400 hover:bg-emerald-50 transition-all duration-200 group cursor-pointer"
           >
             <span className="text-lg group-hover:scale-110 transition-transform">{meta.icon}</span>
-            <span className="text-xs text-slate-300 font-medium text-center leading-tight">{meta.label}</span>
+            <span className="text-xs text-gray-600 font-medium text-center leading-tight">{meta.label}</span>
           </button>
         ))}
       </div>
 
       {filtered.length === 0 && (
-        <p className="text-center text-slate-500 text-sm mt-8">
-          Aucun bloc trouvé
+        <p className="text-center text-gray-400 text-sm mt-8">
+          Aucun élément trouvé
         </p>
       )}
     </div>

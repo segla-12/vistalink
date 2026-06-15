@@ -5,6 +5,7 @@ export type TemplateCategory =
   | "restaurant"
   | "commerce"
   | "photographe"
+  | "coiffeur"
   | "graphiste"
   | "medecin"
   | "garage"

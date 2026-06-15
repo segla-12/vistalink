@@ -47,20 +47,20 @@ export default function SortableBlockItem({
     <div
       ref={setNodeRef}
       style={style}
-      className={`group rounded-xl border-2 transition-all ${
+      className={`group rounded-xl border-2 transition-all bg-white ${
         isSelected
-          ? "border-emerald-500 bg-slate-800/80 shadow-lg shadow-emerald-500/5"
-          : "border-slate-700/50 bg-slate-850 hover:border-slate-600"
+          ? "border-emerald-500 shadow-lg shadow-emerald-500/10"
+          : "border-gray-200 hover:border-gray-300"
       } ${!block.visible ? "opacity-50" : ""}`}
       onClick={onSelect}
     >
       {/* Header du bloc */}
-      <div className="flex items-center gap-2 px-4 py-2.5 border-b border-slate-700/50">
+      <div className="flex items-center gap-2 px-4 py-2.5 border-b border-gray-100">
         {/* Drag handle */}
         <button
           {...attributes}
           {...listeners}
-          className="cursor-grab active:cursor-grabbing text-slate-500 hover:text-white transition-colors"
+          className="cursor-grab active:cursor-grabbing text-gray-400 hover:text-gray-600 transition-colors"
         >
           <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
             <path d="M8 6h2v2H8V6zm6 0h2v2h-2V6zM8 11h2v2H8v-2zm6 0h2v2h-2v-2zm-6 5h2v2H8v-2zm6 0h2v2h-2v-2z" />
@@ -70,7 +70,7 @@ export default function SortableBlockItem({
         {/* Icône + nom */}
         <div className="flex items-center gap-2 flex-1 min-w-0">
           <span className="text-base">{meta?.icon || "📦"}</span>
-          <span className="text-sm font-medium text-slate-200 truncate">
+          <span className="text-sm font-medium text-gray-700 truncate">
             {block.content.title || meta?.label || block.type}
           </span>
         </div>
@@ -79,7 +79,7 @@ export default function SortableBlockItem({
         <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
           <button
             onClick={(e) => { e.stopPropagation(); onToggleVisibility(); }}
-            className="p-1 rounded hover:bg-slate-700 text-slate-400 hover:text-white transition"
+            className="p-1 rounded hover:bg-gray-100 text-gray-400 hover:text-gray-600 transition"
             title={block.visible ? "Masquer" : "Afficher"}
           >
             {block.visible ? (
@@ -90,28 +90,28 @@ export default function SortableBlockItem({
           </button>
           <button
             onClick={(e) => { e.stopPropagation(); onMoveUp(); }}
-            className="p-1 rounded hover:bg-slate-700 text-slate-400 hover:text-white transition"
+            className="p-1 rounded hover:bg-gray-100 text-gray-400 hover:text-gray-600 transition"
             title="Monter"
           >
             <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 15l7-7 7 7" /></svg>
           </button>
           <button
             onClick={(e) => { e.stopPropagation(); onMoveDown(); }}
-            className="p-1 rounded hover:bg-slate-700 text-slate-400 hover:text-white transition"
+            className="p-1 rounded hover:bg-gray-100 text-gray-400 hover:text-gray-600 transition"
             title="Descendre"
           >
             <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
           </button>
           <button
             onClick={(e) => { e.stopPropagation(); onDuplicate(); }}
-            className="p-1 rounded hover:bg-slate-700 text-slate-400 hover:text-white transition"
+            className="p-1 rounded hover:bg-gray-100 text-gray-400 hover:text-gray-600 transition"
             title="Dupliquer"
           >
             <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" /></svg>
           </button>
           <button
             onClick={(e) => { e.stopPropagation(); onRemove(); }}
-            className="p-1 rounded hover:bg-red-600/20 text-slate-400 hover:text-red-400 transition"
+            className="p-1 rounded hover:bg-red-50 text-gray-400 hover:text-red-500 transition"
             title="Supprimer"
           >
             <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
@@ -121,26 +121,26 @@ export default function SortableBlockItem({
 
       {/* Mini preview du contenu */}
       <div className="px-4 py-3">
-        <div className="text-xs text-slate-500 space-y-1">
+        <div className="text-xs text-gray-500 space-y-1">
           {block.content.description && (
             <p className="line-clamp-1">{block.content.description}</p>
           )}
           {block.content.items && (
-            <p className="text-emerald-400/70">
+            <p className="text-emerald-600/70">
               {block.content.items.length} élément{block.content.items.length > 1 ? "s" : ""}
             </p>
           )}
           {block.content.buttonText && (
-            <p className="text-blue-400/70">Bouton : {block.content.buttonText}</p>
+            <p className="text-blue-600/70">Bouton : {block.content.buttonText}</p>
           )}
           {block.content.image && (
-            <p className="text-purple-400/70">📸 Image incluse</p>
+            <p className="text-purple-600/70">📸 Image incluse</p>
           )}
           {block.content.stats && (
-            <p className="text-amber-400/70">{block.content.stats.length} statistiques</p>
+            <p className="text-amber-600/70">{block.content.stats.length} statistiques</p>
           )}
           {!block.content.description && !block.content.items && !block.content.buttonText && !block.content.image && !block.content.stats && (
-            <p className="text-slate-600 italic">Cliquez pour modifier</p>
+            <p className="text-gray-400 italic">Cliquez pour modifier</p>
           )}
         </div>
       </div>

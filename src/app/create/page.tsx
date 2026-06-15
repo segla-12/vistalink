@@ -1,13 +1,14 @@
 "use client";
 
 import { useState, useCallback } from "react";
-import { supabase } from "@/lib/supabase";
 import { useRouter } from "next/navigation";
 import { v4 as uuidv4 } from "uuid";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import TemplateSelector from "@/components/templates/TemplateSelector";
 import type { Template } from "@/lib/templates/types";
+import { supabase } from "@/lib/supabase";
+import { createLocalProject } from "@/lib/local-db";
 
 // ─── Données ─────────────────────────────────────────────
 const projectTypes = [
@@ -121,44 +122,54 @@ export default function CreatePage() {
     const editToken = uuidv4();
     const slug = generateSlug(form.name || "projet");
 
-    // Construire les données en n'envoyant que les champs qui existent
-    const insertData: any = {
+    // Les blocs du template sélectionné
+    const blocks = selectedTemplate
+      ? selectedTemplate.blocks.map((b, i) => ({ ...b, id: uuidv4(), order: i, visible: true }))
+      : [];
+
+    // 1. Sauvegarder dans localStorage (toujours)
+    createLocalProject({
       name: form.name,
-      whatsapp: form.whatsapp,
-      description: form.description,
       edit_token: editToken,
-      slug: slug,
-      is_paid: false,
-    };
+      slug,
+      type: form.type,
+      language: form.language,
+      category: form.category,
+      description: form.description,
+      phone: form.phone,
+      whatsapp: form.whatsapp,
+      email: form.email,
+      address: form.address,
+      blocks,
+    });
 
-    // Ajouter les champs optionnels seulement s'ils ne sont pas vides
-    if (form.type) insertData.type = form.type;
-    if (form.language) insertData.language = form.language;
-    if (form.category) insertData.category = form.category;
-    if (form.phone) insertData.phone = form.phone;
-    if (form.email) insertData.email = form.email;
-    if (form.address) insertData.address = form.address;
+    // 2. Sauvegarder dans Supabase (si disponible)
+    try {
+      const insertData: Record<string, any> = {
+        name: form.name,
+        whatsapp: form.whatsapp,
+        description: form.description,
+        edit_token: editToken,
+        slug,
+        is_paid: false,
+        blocks: blocks,
+      };
 
-    // Ajouter les blocs du template sélectionné
-    if (selectedTemplate) {
-      insertData.blocks = JSON.stringify(selectedTemplate.blocks);
+      if (form.type) insertData.type = form.type;
+      if (form.language) insertData.language = form.language;
+      if (form.category) insertData.category = form.category;
+      if (form.phone) insertData.phone = form.phone;
+      if (form.email) insertData.email = form.email;
+      if (form.address) insertData.address = form.address;
+
+      await supabase.from("catalogs").insert(insertData);
+    } catch (e) {
+      console.warn("[create] Supabase indisponible, projet sauvegardé localement uniquement");
     }
-
-    const { data, error } = await supabase
-      .from("catalogs")
-      .insert(insertData)
-      .select()
-      .single();
 
     setLoading(false);
-
-    if (error || !data) {
-      console.error("Erreur création:", error);
-      return;
-    }
-
     router.push(`/edit/${editToken}`);
-  }, [form, router]);
+  }, [form, selectedTemplate, router]);
 
   return (
     <main className="min-h-screen bg-white text-[#0F172A] font-['Inter',sans-serif]">

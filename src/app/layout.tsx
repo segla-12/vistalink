@@ -21,6 +21,10 @@ const inter = Inter({
 export const metadata: Metadata = {
   title: "Vistalink - Créez des pages professionnelles qui convertissent",
   description: "Landing pages, catalogues, tunnels marketing et mini sites web dans une seule plateforme. Sans coder. En quelques minutes.",
+  icons: {
+    icon: "/images/vistalink-logo.png",
+    apple: "/images/vistalink-logo.png",
+  },
 };
 
 export default function RootLayout({
